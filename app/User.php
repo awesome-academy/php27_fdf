@@ -16,7 +16,9 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 
+        'email', 
+        'password',
     ];
 
     /**
@@ -25,7 +27,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 
+        'remember_token',
     ];
 
     /**
@@ -36,4 +39,31 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function roles()
+    {
+        return $this->belongsToMany(Models\Role::class, 'role_users');
+    }
+
+    public function followers()
+    {
+        return $this->belongsToMany(User::class, 'leader_id', 'follower_id')
+        ->withTimestamps();
+    }
+
+    public function followings()
+    {
+        return $this->belongsToMany(User::class, 'follower_id', 'leader_id')
+        ->withTimestamps();
+    }
+
+    public function lesson()
+    {
+        return $this->hasMany(Models\Lesson::class);
+    }
+
+    public function active()
+    {
+        return $this->hasMany(Models\Active::class);
+    }
 }
